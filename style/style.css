@@ -1,0 +1,72 @@
+
+body {
+    background-image: url('A:/kottans/DOM_Practice/images/backrgound1920.jpg');
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+    flex-flow: row wrap;
+}
+aside {
+    display: block;
+    width: 325px;
+
+
+}
+main {
+    display: block;
+    max-width: 600px;
+
+}
+
+.btnz {
+    width: 100%;
+    height:100%;
+    padding:10px;
+    background-color: antiquewhite;
+}
+.btnz:hover {
+    background-color: burlywood;
+    cursor: pointer;
+}
+
+
+
+
+
+footer {
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height: 50px;
+    text-align: center;
+    color:white;
+    background: black;
+    font-size: 1.2em;
+}
+
+
+.info{
+    background-color: antiquewhite;
+}
+
+
+#humans {
+display: block;
+}
+#orcs {
+    display: none;
+}
+#elves {
+    display: none;
+}
+#undead {
+    display: none;
+}
+
+.active {
+    display: block;
+}
