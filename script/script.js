@@ -19,15 +19,15 @@ request.onload = function() {
 }
 
 function loadPage(jsonObj) {
-    const races = jsonObj['items'];
-    const navbar = document.createElement('ul');
+    const races = jsonObj['items'];    
+    
     for (let i = 0; i < races.length; i++) {
         const race = races[i];
 
 //      SIDEBAR nav elems
-        const navLink = document.createElement('li');
-              navLink.innerText = race['header'];
-              if(i == 0) navLink.classList.add('active');
+        const navButton = document.createElement('button');
+        navButton.innerText = race['header'];
+              if(i == 0) navButton.classList.add('active');
 //      MAIN elems
         const raceArticle = document.createElement('article');
               raceArticle.id = race['header'];
@@ -41,15 +41,16 @@ function loadPage(jsonObj) {
               raceText.innerText = race['decription-text'];
 
 
-        navbar.appendChild(navLink);
+        aside.appendChild(navButton);
         raceArticle.appendChild(raceHeader);
         raceArticle.appendChild(raceImg);
         raceArticle.appendChild(raceText);
         main.appendChild(raceArticle);
-        navLink.addEventListener('click', changeRace);
+        navButton.addEventListener('click', changeRace);
     }
-    aside.appendChild(navbar);
-    body.appendChild(aside).appendChild(main);
+
+    body.appendChild(aside);
+    body.appendChild(main);
 }
 
 function changeRace() {
@@ -64,7 +65,7 @@ function deactivate() {
     for(let i = 0; i<sects.length;i++) {
         sects[i].classList.value = "";
     }
-    var lis = document.getElementsByTagName('li');
+    var lis = document.getElementsByTagName('button');
     for(let i = 0; i<lis.length;i++) {
         lis[i].classList.value = "";
     }
