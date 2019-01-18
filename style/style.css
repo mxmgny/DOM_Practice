@@ -1,0 +1,8 @@
+.active {
+    background-color: brown;
+    display: block;
+}
+
+article {
+    display: none;
+}

@@ -5,25 +5,67 @@ request.open('GET', requestURL);
 request.responseType = 'json';
 request.send();
 
-const section = document.querySelector('section');
+// element for sidebar links
+const aside = document.createElement('aside');
+//create element for main content
+const main = document.createElement('main');
+const body = document.querySelector('body');
+
 
 request.onload = function() {
-    var races = request.response;
-    console.log(races['items']);
-    for (let i = 0; i < races['items'].length; i++) {
-        var race = races['items'][i];
-        var article = document.createElement('article');
-        var header = document.createElement('h2');
-        var paragraph = document.createElement('p');
-        var img = document.createElement('img');
-        
+    const races = request.response;
+    loadPage(races);
 
-        header.textContent = race['header'];
-        paragraph.textContent = race['decription-text'];
-        img.src = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/"+race['logo'];
-        article.appendChild(header);
-        article.appendChild(img);
-        article.appendChild(paragraph);
-        section.appendChild(article);
+}
+
+function loadPage(jsonObj) {
+    const races = jsonObj['items'];
+    const navbar = document.createElement('ul');
+    for (let i = 0; i < races.length; i++) {
+        const race = races[i];
+
+//      SIDEBAR nav elems
+        const navLink = document.createElement('li');
+              navLink.innerText = race['header'];
+              if(i == 0) navLink.classList.add('active');
+//      MAIN elems
+        const raceArticle = document.createElement('article');
+              raceArticle.id = race['header'];
+              console.log(raceArticle.id);
+              if(i == 0) raceArticle.classList.add('active');
+        const raceHeader = document.createElement('h2');
+              raceHeader.innerText = race['header'];
+        const raceImg = document.createElement('img');
+              raceImg.src = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/"+race['logo'];
+        const raceText = document.createElement('p');
+              raceText.innerText = race['decription-text'];
+
+
+        navbar.appendChild(navLink);
+        raceArticle.appendChild(raceHeader);
+        raceArticle.appendChild(raceImg);
+        raceArticle.appendChild(raceText);
+        main.appendChild(raceArticle);
+        navLink.addEventListener('click', changeRace);
+    }
+    aside.appendChild(navbar);
+    body.appendChild(aside).appendChild(main);
+}
+
+function changeRace() {
+    deactivate();
+    var checkLI = document.getElementById(this.innerText);
+        checkLI.classList.add('active');
+    this.classList.add('active');
+}
+
+function deactivate() { 
+    var sects = document.getElementsByTagName('article');
+    for(let i = 0; i<sects.length;i++) {
+        sects[i].classList.value = "";
+    }
+    var lis = document.getElementsByTagName('li');
+    for(let i = 0; i<lis.length;i++) {
+        lis[i].classList.value = "";
     }
 }
