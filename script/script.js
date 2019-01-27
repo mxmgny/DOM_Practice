@@ -11,62 +11,67 @@ const aside = document.createElement('aside');
 const main = document.createElement('main');
 const body = document.querySelector('body');
 
-
+//call loadPage function and throw JSON object as argument
 request.onload = function() {
-    const races = request.response;
-    loadPage(races);
-
+    loadPage(request.response);
 }
 
 function loadPage(jsonObj) {
-    const races = jsonObj['items'];    
-    
-    for (let i = 0; i < races.length; i++) {
-        const race = races[i];
+    const races = jsonObj['items'];
 
-//      SIDEBAR nav elems
-        const navButton = document.createElement('button');
-        navButton.innerText = race['header'];
-              if(i == 0) navButton.classList.add('active');
-//      MAIN elems
-        const raceArticle = document.createElement('article');
-              raceArticle.id = race['header'];
-              console.log(raceArticle.id);
-              if(i == 0) raceArticle.classList.add('active');
-        const raceHeader = document.createElement('h2');
-              raceHeader.innerText = race['header'];
-        const raceImg = document.createElement('img');
-              raceImg.src = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/"+race['logo'];
-        const raceText = document.createElement('p');
-              raceText.innerText = race['decription-text'];
-
-
-        aside.appendChild(navButton);
-        raceArticle.appendChild(raceHeader);
-        raceArticle.appendChild(raceImg);
-        raceArticle.appendChild(raceText);
-        main.appendChild(raceArticle);
+    races.map( (race,id) => {
+//      create navButton and add Event listener
+        const navButton = createTextElement('button',race['header']);
         navButton.addEventListener('click', changeRace);
-    }
+        if(id == 0) navButton.classList.add('active');
+//      create article
+        const raceArticle = createRaceArticle(race);
+        if(id == 0) raceArticle.classList.add('active');
+//      add navButton and main to the DOM
+        aside.appendChild(navButton);
+        main.appendChild(raceArticle);
+    });
 
     body.appendChild(aside);
     body.appendChild(main);
 }
 
+
+function createRaceArticle(raceInfo) {
+    let article = document.createElement('article');
+        article.id = raceInfo['header'];
+     article.appendChild(createTextElement('h2',raceInfo['header']));
+     article.appendChild(createImage(raceInfo['logo']));
+     article.appendChild(createTextElement('p',raceInfo['decription-text']));
+     return article;
+}
+function createImage(src) {
+    let imgElement = document.createElement('img');
+    imgElement.src = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/"+src;
+    return imgElement;
+}
+
+function createTextElement(elementTag, text){
+    let element =  document.createElement(elementTag);
+    element.innerText = text;
+    return element;
+}
+
+
+/*Selects all elements by given element name and clear its' class list*/
+function deactivate(tagName) { 
+    let arrayOfElements = Array.from(document.getElementsByTagName(tagName));
+    arrayOfElements.map((element) => {element.classList.value = ""});
+}
+
+
+/*Delete all classes from sidebar elements and sections
+  Add .active class to chosen section and sidebar button*/
 function changeRace() {
-    deactivate();
-    var checkLI = document.getElementById(this.innerText);
-        checkLI.classList.add('active');
+    deactivate('article');
+    deactivate('button');
+    document.getElementById(this.innerText).classList.add('active');
     this.classList.add('active');
 }
 
-function deactivate() { 
-    var sects = document.getElementsByTagName('article');
-    for(let i = 0; i<sects.length;i++) {
-        sects[i].classList.value = "";
-    }
-    var lis = document.getElementsByTagName('button');
-    for(let i = 0; i<lis.length;i++) {
-        lis[i].classList.value = "";
-    }
-}
+
