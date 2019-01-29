@@ -1,49 +1,55 @@
-const requestURL = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/script/data.json";
-const request = new XMLHttpRequest();
-request.open('GET', requestURL);
-request.responseType = 'json';
-request.send();
 
+const requestURL = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/script/data.json";
 const aside = document.createElement('aside');
+    aside.classList.add('navbar');
 const main = document.createElement('main');
+    main.classList.add('collection');
 const body = document.querySelector('body');
 
-request.onload = function() {
-    loadPage(request.response);
-}
+fetch(requestURL)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(jsonObj){
+        const races = jsonObj['items'];
+       
+        races.forEach( (race) => {
+            const navButton = createTextElement('button',race['header']);
+                navButton.classList.add('navbar__button');
+            const raceArticle = createRaceArticle(race);
+            aside.appendChild(navButton);
+            main.appendChild(raceArticle);
+        });
 
-function loadPage(jsonObj) {
-    const races = jsonObj['items'];
-
-    races.map( (race,id) => {
-
-        const navButton = createTextElement('button',race['header']);
-        navButton.addEventListener('click', changeRace);
-        if(id == 0) navButton.classList.add('active');
-
-        const raceArticle = createRaceArticle(race);
-        if(id == 0) raceArticle.classList.add('active');
-
-        aside.appendChild(navButton);
-        main.appendChild(raceArticle);
-    });
-
+    aside.onclick = function(event) {
+        changeRace.call(event.target)
+    };
+    aside.firstElementChild.classList.add('navbar__button_active');
+    main.firstElementChild.classList.add('article_active');
     body.appendChild(aside);
     body.appendChild(main);
-}
+    })
+    .catch( console.log() );
 
 function createRaceArticle(raceInfo) {
     let article = document.createElement('article');
         article.id = raceInfo['header'];
-     article.appendChild(createTextElement('h2',raceInfo['header']));
-     article.appendChild(createImage(raceInfo['logo']));
-     article.appendChild(createTextElement('p',raceInfo['decription-text']));
+        article.classList.add('article')
+    let header = createTextElement('h2',raceInfo['header']);
+        header.classList.add('article__header');
+    let paragraph = createTextElement('p',raceInfo['decription-text']);
+        paragraph.classList.add('article__paragraph');
+    
+    article.appendChild(header);
+    article.appendChild(createImage(raceInfo['logo']));
+    article.appendChild(paragraph);
      return article;
 }
 
 function createImage(src) {
     let imgElement = document.createElement('img');
     imgElement.src = "https://raw.githubusercontent.com/mxmgny/DOM_Practice/master/"+src;
+    imgElement.classList.add('article__image');
     return imgElement;
 }
 
@@ -53,14 +59,14 @@ function createTextElement(elementTag, text){
     return element;
 }
 
-function deactivate(tagName) { 
-    let arrayOfElements = Array.from(document.getElementsByTagName(tagName));
-    arrayOfElements.map((element) => {element.classList.value = ""});
+function deactivate(className) { 
+    let arrayOfElements = Array.from(document.getElementsByClassName(className));
+    arrayOfElements.map( element => element.classList.value = className );
 }
 
 function changeRace() {
     deactivate('article');
-    deactivate('button');
-    document.getElementById(this.innerText).classList.add('active');
-    this.classList.add('active');
+    deactivate('navbar__button');
+    document.getElementById(this.innerText).classList.add('article_active');
+    this.classList.add('navbar__button_active');
 }
